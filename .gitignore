@@ -1,0 +1,72 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+log/
+
+\
+
+# Gradle (if you ever use it)
+.gradle
+
+# IDE files
+.idea/
+
+# OS generated files
+.DS_Store
+.localized
+Thumbs.db
+
+# Spring Boot specific
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# For the frontend project (if it's in a subfolder)
+# /insa-sentinel-frontend/node_modules/
+# /insa-sentinel-frontend/.next/
+# /insa-sentinel-frontend/out/
+# /insa-sentinel-frontend/build/
+
+# Private configuration
+# application.properties may contain sensitive data, so it's often ignored
+# However, for this project, we'll keep it for now as it contains DB connection info,
+# but you should be careful with sensitive data in real projects.
+# application.properties
