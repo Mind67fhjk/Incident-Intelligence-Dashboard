@@ -1,27 +1,39 @@
-package com.insa.incidentdashboard.user;
+package com.insa.incidentdashboard.user; // ፓኬጁን አስተካክል
 
-
-import lombok.RequiredArgsConstructor;
+import com.insa.incidentdashboard.user.User;
+import com.insa.incidentdashboard.user.UserRepository; // ይህንን ማከል አለብህ
+import com.insa.incidentdashboard.user.UserResponse;
+import com.insa.incidentdashboard.user.UserService; // ይህንን ማከል አለብህ
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-@RestController // ይህ ክላስ RESTful API endpoints እንደሚይዝ ይነግራል
-@RequestMapping("/api/users") // ሁሉም endpoints በዚህ base path ስር ይሆናሉ
-@RequiredArgsConstructor // Lombok: ለ final fields constructor ይፈጥራል
+@RestController
+@RequestMapping("/api/users") // የመጨረሻው ተልዕኮ ላይ ይህንን እንጨምራለን
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository; // ለ GET request በቀጥታ እንጠቀማለን
+    private final UserRepository userRepository; // ይህንን ማከል አለብህ
 
-    @PostMapping // POST request ለ /api/users
-    public User create(@RequestBody CreateUserRequest request) {
-        return userService.create(request);
+    // Constructor Injection
+    public UserController(UserService userService, UserRepository userRepository) {
+        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
-    @GetMapping // GET request ለ /api/users
-    public List<User> getAll() {
-        return userRepository.findAll(); // ሁሉንም users ከዳታቤዝ ያመጣል
+    // ለጊዜው CreateUserRequest የሚባል ክላስ ስላልፈጠርን ይህ ስህተት ሊሰጥ ይችላል።
+    // በኋላ ላይ እንፈጥረዋለን።
+    // @PostMapping
+    // public UserResponse create(@RequestBody CreateUserRequest request) {
+    //     User user = userService.create(request);
+    //     return userService.toResponse(user);
+    // }
+
+    @GetMapping
+    public List<UserResponse> getAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userService::toResponse)
+                .toList();
     }
 }

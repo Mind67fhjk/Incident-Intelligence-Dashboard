@@ -1,23 +1,42 @@
 package com.insa.incidentdashboard.user;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service // ይህ ክላስ business logic እንደሚይዝ ይነግራል
-@RequiredArgsConstructor // Lombok: ለ final fields constructor ይፈጥራል
+import java.util.List;
+
+@Service
 public class UserService {
 
-    private final UserRepository userRepository; // UserRepositoryን ይጠቀማል
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // በኋላ ላይ እንጨምራለን
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public User create(CreateUserRequest request) {
+        User user = new User();
+        user.setUsername(request.username());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password())); // የይለፍ ቃል ኢንክሪፕት ማድረግ
+        user.setRole(request.role());
+        return userRepository.save(user);
+    }
 
-        User user = User.builder() // User object ይፈጥራል
-                .username(request.username())
-                .email(request.email())
-                .password(request.password()) // TODO: የይለፍ ቃል hash ማድረግ አለብን!
-                .role(request.role())
-                .build();
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
-        return userRepository.save(user); // Userን ወደ ዳታቤዝ ያስቀምጣል
+    // ይህንን በኋላ ላይ እናስተካክላለን
+    public UserResponse toResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
 }
+
