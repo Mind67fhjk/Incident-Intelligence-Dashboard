@@ -70,3 +70,28 @@ Thumbs.db
 # However, for this project, we'll keep it for now as it contains DB connection info,
 # but you should be careful with sensitive data in real projects.
 # application.properties
+
+
+
+
+# Maven
+/target/
+
+# Gradle
+.gradle/
+/build/
+
+# OS generated files
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+
+# Sensitive files (DO NOT COMMIT)
+# application.properties can contain sensitive data, but we need it for basic setup.
+# For production, we would use environment variables or a separate config server.
+# For now, ensure your actual passwords are NOT committed if you share this project publicly.
+# If you were to create a separate file for local secrets, you'd add it here:
+# src/main/resources/application-local.properties
