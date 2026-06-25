@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "incidents")
-@Getter
-@Setter
+@Data // @Getter, @Setter, @ToString, @EqualsAndHashCode, @RequiredArgsConstructorን ይተካል
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,13 +24,13 @@ public class Incident {
     @Column(columnDefinition = "TEXT") // ለረጅም ጽሁፍ
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Severity severity;
+    @Enumerated(EnumType.STRING) // Enum እሴቶችን በዳታቤዝ ውስጥ እንደ String ለማስቀመጥ
+    @Column(nullable = false) // ሁኔታው ባዶ መሆን የለበትም
+    private IncidentStatus status; // የክስተቱ ሁኔታ (OPEN, IN_PROGRESS, RESOLVED, CLOSED)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private IncidentStatus status;
+    private Severity severity; // የክስተቱ ክብደት (LOW, MEDIUM, HIGH, CRITICAL)
 
     @ManyToOne(fetch = FetchType.LAZY) // ብዙ Incident ለአንድ User ሊሆን ይችላል
     @JoinColumn(name = "assigned_user_id") // የውጪ ቁልፍ (Foreign Key)
@@ -42,12 +41,12 @@ public class Incident {
     private User reportedByUser; // ማን ክስተቱን እንደዘገበ
 
     @Column(nullable = false)
-    private LocalDateTime incidentDate; // ክስተቱ የተከሰተበት ቀን
+    private LocalDateTime incidentDate; // ክስተቱ የተከሰተበት ቀንና ሰዓት
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(nullable = false, updatable = false) // አንዴ ከተፈጠረ በኋላ አይቀየርም
+    private LocalDateTime createdAt; // ክስተቱ የተፈጠረበት ቀንና ሰዓት
 
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt; // ክስተቱ ለመጨረሻ ጊዜ የተሻሻለበት ቀንና ሰዓት
 
     @PrePersist
     protected void onCreate() {

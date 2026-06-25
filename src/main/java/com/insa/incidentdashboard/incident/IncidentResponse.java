@@ -15,5 +15,4 @@ public record IncidentResponse(
         LocalDateTime incidentDate,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-) {
-}
+) {}
