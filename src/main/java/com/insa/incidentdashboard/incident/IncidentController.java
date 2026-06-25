@@ -1,23 +1,41 @@
 package com.insa.incidentdashboard.incident;
 
-import lombok.RequiredArgsConstructor; // ይህን አስገባ
-import org.springframework.http.HttpStatus; // ይህን አስገባ
-import org.springframework.http.ResponseEntity; // ይህን አስገባ
-import org.springframework.web.bind.annotation.*; // እነዚህን አስገባ
-
-
-import jakarta.validation.Valid; // ይህን አስገባ
-
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.insa.incidentdashboard.dto.NoteResponse;
+import com.insa.incidentdashboard.dto.CreateNoteRequest;
+import com.insa.incidentdashboard.incident.IncidentResponse; // ይህ እንዳለህ እርግጠኛ ሁን
+import com.insa.incidentdashboard.incident.UpdateIncidentStatusRequest; // ይህ እንዳለህ እርግጠኛ ሁን
+import jakarta.validation.Valid;
 import java.util.List;
 
-@RestController // ይህ ክላስ RESTful API ጥያቄዎችን እንደሚይዝ ይነግረናል
-@RequestMapping("/api/incidents") // ሁሉም የዚህ Controller endpoints በ "/api/incidents" ይጀምራሉ
-@RequiredArgsConstructor // Lombok: IncidentServiceን በ constructor injection ለማስገባት
+@RestController
+@RequestMapping("/api/incidents")
+@RequiredArgsConstructor
 public class IncidentController {
 
-    private final IncidentService incidentService; // IncidentServiceን ወደ Controller ውስጥ እናስገባለን
+    private final IncidentService incidentService;
     private final IncidentRepository incidentRepository;
-    // አዲስ ክስተት ለመፍጠር (ለሙከራ)
+
+    // 1. ማስታወሻ ለመጨመር
+    @PostMapping("/{incidentId}/notes")
+    public ResponseEntity<NoteResponse> addNoteToIncident(
+            @PathVariable Long incidentId,
+            @Valid @RequestBody CreateNoteRequest request) {
+        NoteResponse response = incidentService.addNoteToIncident(incidentId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // 2. የማስታወሻዎች ሊስት ለማግኘት (እዚህ ጋር የነበረው '}' ተወግዷል፣ 'NoteResponse' ስህተቱም ተስተካክሏል)
+    @GetMapping("/{incidentId}/notes")
+    public ResponseEntity<List<NoteResponse>> getNotesForIncident(@PathVariable Long incidentId) {
+        List<NoteResponse> notes = incidentService.getNotesForIncident(incidentId);
+        return ResponseEntity.ok(notes);
+    }
+
+    // 3. አዲስ ክስተት ለመፍጠር (ለሙከራ)
     @PostMapping
     public ResponseEntity<IncidentResponse> createIncident(
             @RequestParam String title,
@@ -27,42 +45,37 @@ public class IncidentController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // ሁሉንም ክስተቶች ለማግኘት
+    // 4. ሁሉንም ክስተቶች ለማግኘት
     @GetMapping
     public ResponseEntity<List<IncidentResponse>> getAllIncidents() {
         List<IncidentResponse> incidents = incidentService.getAllIncidents();
         return ResponseEntity.ok(incidents);
     }
 
-    // የክስተቱን ሁኔታ የሚያዘምን endpoint
-    @PatchMapping("/{id}/status") // PATCH ጥያቄዎችን ይቀበላል። "{id}" የክስተቱን ID ከURL ይቀበላል።
+    // 5. የክስተቱን ሁኔታ የሚያዘምን endpoint
+    @PatchMapping("/{id}/status")
     public ResponseEntity<IncidentResponse> updateStatus(
-            @PathVariable Long id, // ከURL የሚመጣውን ID ይቀበላል
-            @Valid @RequestBody UpdateIncidentStatusRequest request) { // ከጥያቄው አካል (body) የሚመጣውን request ይቀበላል
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateIncidentStatusRequest request) {
         IncidentResponse response = incidentService.updateStatus(id, request);
-        return ResponseEntity.ok(response); // የተዘመነውን ክስተት ይመልሳል
+        return ResponseEntity.ok(response);
     }
 
-    // በሁኔታ (Status) የሚያጣራ API
+    // 6. በሁኔታ (Status) የሚያጣራ API
     @GetMapping("/status/{status}")
-    public List<IncidentResponse> getByStatus(
-            @PathVariable IncidentStatus status) { // Path Variableን ይቀበላል
-
+    public List<IncidentResponse> getByStatus(@PathVariable IncidentStatus status) {
         return incidentRepository.findByStatus(status)
                 .stream()
                 .map(incidentService::toResponse)
                 .toList();
     }
 
-    // በSeverity የሚያጣራ API
+    // 7. በSeverity የሚያጣራ API
     @GetMapping("/severity/{severity}")
-    public List<IncidentResponse> getBySeverity(
-            @PathVariable Severity severity) { // Path Variableን ይቀበላል
-
+    public List<IncidentResponse> getBySeverity(@PathVariable Severity severity) {
         return incidentRepository.findBySeverity(severity)
                 .stream()
                 .map(incidentService::toResponse)
                 .toList();
     }
-
-}
+} // ክላሱ በትክክል የሚያበቃው እዚህ የመጨረሻው መስመር ላይ ብቻ ነው!

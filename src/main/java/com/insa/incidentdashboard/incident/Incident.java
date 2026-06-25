@@ -45,7 +45,6 @@ public class Incident {
 
     @Column(nullable = false, updatable = false) // አንዴ ከተፈጠረ በኋላ አይቀየርም
     private LocalDateTime createdAt; // ክስተቱ የተፈጠረበት ቀንና ሰዓት
-
     private LocalDateTime updatedAt; // ክስተቱ ለመጨረሻ ጊዜ የተሻሻለበት ቀንና ሰዓት
 
     @PrePersist
