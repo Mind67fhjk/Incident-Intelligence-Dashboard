@@ -21,13 +21,10 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    // ለጊዜው CreateUserRequest የሚባል ክላስ ስላልፈጠርን ይህ ስህተት ሊሰጥ ይችላል።
-    // በኋላ ላይ እንፈጥረዋለን።
-    // @PostMapping
-    // public UserResponse create(@RequestBody CreateUserRequest request) {
-    //     User user = userService.create(request);
-    //     return userService.toResponse(user);
-    // }
+    @PostMapping // POST request ለ /api/users
+    public User create(@RequestBody CreateUserRequest request) {
+        return userService.create(request);
+    }
 
     @GetMapping
     public List<UserResponse> getAll() {

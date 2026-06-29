@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // ይህን አስገባ
 import org.springframework.security.crypto.password.PasswordEncoder; // ይህን አስገባ
 
+
+
 @Configuration
 public class SecurityConfig {
 

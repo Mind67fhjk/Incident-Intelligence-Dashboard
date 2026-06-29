@@ -3,6 +3,7 @@ package com.insa.incidentdashboard.user;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 
 @Service
@@ -17,11 +18,14 @@ public class UserService {
     }
 
     public User create(CreateUserRequest request) {
-        User user = new User();
-        user.setUsername(request.username());
-        user.setEmail(request.email());
-        user.setPassword(passwordEncoder.encode(request.password())); // የይለፍ ቃል ኢንክሪፕት ማድረግ
-        user.setRole(request.role());
+
+        User user = User.builder()
+                .username(request.username())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password())) // እዚህ ላይ የይለፍ ቃሉን hash እንዲያደርግ አሻሽል
+                .role(request.role())
+                .build();
+
         return userRepository.save(user);
     }
 
